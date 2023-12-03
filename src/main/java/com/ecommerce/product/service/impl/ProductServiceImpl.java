@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(UUID productId, ProductDto productDto) {
         Product existingProduct = getProductById(productId);
-        modelMapper.map(productDto, existingProduct); // Update existingProduct with productDto fields
+        modelMapper.map(productDto, existingProduct);
         existingProduct.setId(productId);
         Product updatedProduct = productRepository.save(existingProduct);
 
@@ -80,7 +80,6 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    // Helper methods for mapping and interservice call
 
     private Product getProductById(UUID productId) {
         return productRepository.findById(productId)

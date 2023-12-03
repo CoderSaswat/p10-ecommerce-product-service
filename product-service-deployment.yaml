@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - name: product-service
+          image: saswatcloud/p10-ecommerce-product-service:1
+          ports:
+            - containerPort: 8080
+          env:
+          - name: MONGO_URL
+            value: mongodb://mongodb-service:27017/products
+          - name: INVENTORY_SERVICE_BASE_URL
+            valueFrom:
+              configMapKeyRef:
+                name: service-config
+                key: INVENTORY_SERVICE_BASE_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+spec:
+  selector:
+    app: product-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
